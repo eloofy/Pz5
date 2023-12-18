@@ -5,27 +5,7 @@ import torchvision
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
-
-
-class SimpleNet(nn.Module):
-    def __init__(self):
-        super(SimpleNet, self).__init__()
-
-        self.model = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(16),
-            nn.ReLU(),
-
-            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-
-            nn.Flatten(),
-            nn.Linear(32 * 28 * 28, 10)
-        )
-
-    def forward(self, x):
-        return self.model(x)
+from NN import SimpleNet
 
 
 def calculate_metrics(loader, model):
@@ -57,7 +37,7 @@ trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
 valloader = DataLoader(valset, batch_size=64, shuffle=False)
 
 
-net = SimpleNet()
+net = SimpleNet(1, 28, 10)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
