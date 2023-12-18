@@ -8,8 +8,9 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_sc
 import matplotlib.pyplot as plt
 from NN import SimpleNet
 
+
 class Trainer:
-    def __init__(self, num_epochs=5, batch_size=64, learning_rate=0.01, momentum=0.9):
+    def __init__(self, num_epochs=10, batch_size=64, learning_rate=0.005, momentum=0.8):
         self.num_epochs = num_epochs
         self.batch_size = batch_size
         self.learning_rate = learning_rate
@@ -29,7 +30,7 @@ class Trainer:
 
         self.net = SimpleNet(3, 32, 10).to(self.device)
         self.criterion = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(self.net.parameters(), lr=self.learning_rate, momentum=self.momentum)
+        self.optimizer = optim.Adam(self.net.parameters(), lr=self.learning_rate)
 
         self.train_accuracy_list, self.train_recall_list, self.train_precision_list, self.train_f1_list = [], [], [], []
         self.val_accuracy_list, self.val_recall_list, self.val_precision_list, self.val_f1_list = [], [], [], []
@@ -62,6 +63,8 @@ class Trainer:
                 loss.backward()
                 self.optimizer.step()
                 running_loss += loss.item()
+
+            print(running_loss/64)
 
             train_metrics = self.calculate_metrics(self.trainloader, self.net)
             val_metrics = self.calculate_metrics(self.valloader, self.net)
